@@ -1,30 +1,43 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Post
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.views.generic import ListView
 
 
 # Create your views here.
+# Create class base view
+class PostListView(ListView):
+	queryset = Post.published.all()
+	context_object_name = 'posts'
+	paginate_by = 3
+	template_name = 'blog/post/list.html'
+
+
+
+
+
+
 
 #crete the posts list from the published manager we made.
-def post_list(request):
+#def post_list(request):
 	#posts = Post.published.all()
-	object_list = Post.published.all()
-	paginator = Paginator(object_list, 3) # 3 posts in each page.
+#	object_list = Post.published.all()
+#	paginator = Paginator(object_list, 3) # 3 posts in each page.
 	# Get to get page number
-	page = request.GET.get('page')
+#	page = request.GET.get('page')
 
-	try:
-		posts = paginator.page(page)
-
-	except PageNotAnInteger:
+#	try:
+#		posts = paginator.page(page)
+#
+#	except PageNotAnInteger:
 		#if page not integer deliver the first page
-		posts = paginator.page(1)
+#		posts = paginator.page(1)
 
-	except EmptyPage:
+#	except EmptyPage:
 		# if page is out of range deliver last page
-		posts = paginator.page(paginator.num_pages)
+#		posts = paginator.page(paginator.num_pages)
 
-	return render(request, 'blog/post/list.html', {'page' : page, 'posts' : posts})
+#	return render(request, 'blog/post/list.html', {'page' : page, 'posts' : posts})
 
 def post_detail(request, year, month, day, post):
 	post = get_object_or_404(Post, slug=post, status = 'published', publish__year=year, publish__month=month, publish__day=day)
